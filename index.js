@@ -4,7 +4,6 @@ const app= express();
 
 app.use(express.json());
 const courses =[
-
     {id:1, name:'course1'},
     {id:2, name:'course2'},
     {id:3, name:'course3'}
@@ -29,19 +28,22 @@ app.post('/api/courses',(req,res)=>{
     courses.push(course);
     res.send(course);
 })
-app.put('/api/courses/:id',(req,res)=>{
-const course =courses.find(c => c.id===parseInt(req.params.id))
-if (!course) res.status(404).send('The course with the given id was not found')
 
-    const {error} =validateCourse(req.body);
-     if(error){
-        res.status(400).send(error.details[0].message);
-        return;
+
+app.put('/api/courses/:id', (req, res) => {
+    const course =courses.find(c => c.id === parseInt(req.params.id))
+    if (!course) res.status(404).send('The course with the given id was not found')
+
+        const { error } = validateCourse(req.body);
+        if(error) {
+            res.status(400).send(error.details[0].message);
+            return;
+        }
+        
+        course.name = req.body.name;
+        res.send(course);
     }
-    
-    course.name=req.body.name;
-    res.send(course);
-});
+);
 
 function validateCourse(course){
 
