@@ -45,22 +45,32 @@ app.put('/api/courses/:id', (req, res) => {
     }
 );
 
-function validateCourse(course){
+function validateCourse(course) {
 
-     const schema=Joi.object({
+     const schema = Joi.object({
         name:Joi.string().min(3).required() 
     });
 
-    const result=schema.validate(course);//
+    const result = schema.validate(course);
     return result;
     
 }
 
-app.get('/api/courses/:id',(req,res) =>{
+app.get('/api/courses/:id', (req, res) => {
     const course =courses.find(c => c.id===parseInt(req.params.id))
     if (!course) res.status(404).send('The course with the given id was not found')
     res.send(course);
 })
 
 const port =process.env.PORT||5000;
-app.listen(port,()=>console.log(`listening on port ${port}`));
+app.listen(port, () => console.log(`listening on port ${port}`));
+
+app.delete('/api/courses/:id', (req, res) => {
+    const course =courses.find(c => c.id===parseInt(req.params.id))
+    if (!course) res.status(404).send('The course with the given id was not found')
+    
+    const index = courses.indexOf(course);
+    course.splice(index,1);
+
+    res.send(course);
+});
